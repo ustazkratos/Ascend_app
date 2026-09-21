@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#050a14" />
+<title>Ascend — PULSE Fitness RPG</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oxanium:wght@500;600;700;800&display=swap');
+:root{
+ --bg:#050a14;--bg2:#08101f;--card:#0d1728;--card2:#111c30;--line:#1a2b49;
+ --blue:#1e40af;--blue2:#2563eb;--blue3:#172554;--violet:#6d28d9;
+ --text:#f3f6fb;--muted:#94a3b8;--good:#35d07f;--warn:#f5b63b;--danger:#f06464;
+ --glow:0 0 28px rgba(37,99,235,.22);
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#020611;color:var(--text);font-family:Manrope,system-ui,sans-serif}
+body{min-height:100vh;background:
+ radial-gradient(900px 500px at 50% -120px,rgba(37,99,235,.14),transparent 60%),
+ linear-gradient(180deg,#030812,#050a14)}
+button,input{font:inherit}
+button{cursor:pointer}
+#shell{width:min(430px,100%);min-height:100vh;margin:auto;background:
+ linear-gradient(rgba(255,255,255,.015),rgba(255,255,255,.005)),var(--bg);
+ position:relative;overflow:hidden;border-inline:1px solid rgba(255,255,255,.03)}
+#shell:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.12;
+ background:linear-gradient(transparent 98%,rgba(59,130,246,.08) 100%);background-size:100% 5px}
+.screen{min-height:100vh;padding:22px 18px 96px;animation:rise .28s ease}
+.hidden{display:none!important}
+.brand{display:flex;gap:12px;align-items:center}
+.mark{width:46px;height:46px;border:1px solid rgba(37,99,235,.42);display:grid;place-items:center;
+ box-shadow:var(--glow);background:linear-gradient(145deg,rgba(37,99,235,.22),rgba(124,58,237,.08));
+ clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%)}
+.mark span{font:800 14px Oxanium;color:#8db7ff}
+.brandname{font:800 21px Oxanium;letter-spacing:.08em}
+.brandname b{color:#6ea0ff}
+.pulseonline{font:700 10px Oxanium;color:#6ea0ff;letter-spacing:.08em;margin-top:3px}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#3b82f6;margin-right:6px;
+ box-shadow:0 0 10px rgba(37,99,235,.7);animation:pulse 1.7s infinite}
+.kicker{font:700 11px Oxanium;letter-spacing:.09em;color:#8f6cff;text-transform:uppercase}
+.title{font:800 clamp(29px,8vw,34px) Oxanium;line-height:1.08;margin:8px 0 10px;letter-spacing:-.02em}
+.sub{color:var(--muted);line-height:1.55}
+.progress{height:6px;background:#0e1a2b;border-radius:99px;overflow:hidden}
+.progress>i{display:block;height:100%;background:linear-gradient(90deg,var(--blue3),var(--blue2));
+ box-shadow:0 0 12px rgba(37,99,235,.45);transition:width .45s cubic-bezier(.2,.8,.2,1)}
+.panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(17,28,48,.95),rgba(10,19,34,.95));
+ box-shadow:0 10px 30px rgba(0,0,0,.25);border-radius:14px}
+.glow{box-shadow:var(--glow)}
+.btn{border:1px solid transparent;border-radius:12px;min-height:50px;padding:0 16px;font-weight:800;
+ letter-spacing:.04em;transition:.15s transform,.2s box-shadow,.2s background}
+.btn:active{transform:scale(.975)}
+.primary{background:linear-gradient(135deg,var(--blue3),var(--blue));color:white;
+ box-shadow:0 8px 22px rgba(37,99,235,.25)}
+.secondary{background:#0d1a2e;color:#dbeafe;border-color:#24406b}
+.ghost{background:transparent;color:#b8c4d8;border-color:#243956}
+.options{display:grid;gap:10px}
+.option{width:100%;text-align:left;background:#0b1525;border:1px solid #203453;color:#e8edf6;
+ padding:15px;border-radius:12px;font-weight:700}
+.option.sel{border-color:#3b82f6;background:rgba(37,99,235,.16);box-shadow:0 0 20px rgba(37,99,235,.12)}
+.field{width:100%;background:#0b1627;border:1px solid #29446d;border-radius:13px;color:white;padding:16px;
+ outline:none;font-size:18px}.field:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+.toprow{display:flex;align-items:center;justify-content:space-between}
+.rankrow{display:flex;gap:14px;align-items:center;padding:15px}
+.rank{width:62px;height:62px;display:grid;place-items:center;background:linear-gradient(145deg,#111d33,#17294a);
+ border:1px solid #3e58a7;color:#a78bfa;font:800 30px Oxanium;border-radius:12px}
+.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{padding:13px}.stat strong{font:800 23px Oxanium}.stat small{color:var(--muted);text-transform:uppercase;font-weight:700}
+.quest{padding:16px;margin-top:11px}.quest h3{font:800 20px Oxanium;margin:0 0 7px}
+.chips{display:flex;gap:7px;flex-wrap:wrap}.chip{border:1px solid #274166;border-radius:99px;padding:5px 8px;color:#b8c5d8;font-size:11px;font-weight:700}
+.exercise{display:flex;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #1b2c48}
+.exico{width:34px;height:34px;border-radius:10px;background:rgba(37,99,235,.15);color:#76a7ff;display:grid;place-items:center;font-weight:800}
+.exercise b{flex:1}.exercise span{color:#8db7ff;font-weight:800}
+.message{border-left:3px solid #3b82f6;background:rgba(37,99,235,.08);padding:13px 14px;margin-top:14px;border-radius:0 12px 12px 0}
+.message small{font:700 10px Oxanium;color:#76a7ff;text-transform:uppercase}
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(430px,100%);height:76px;background:rgba(5,10,20,.95);
+ backdrop-filter:blur(12px);border-top:1px solid #182945;display:grid;grid-template-columns:repeat(4,1fr);z-index:30}
+.nav button{background:none;border:0;color:#71819b;font:700 10px Manrope}
+.nav button.active{color:#76a7ff}.nav .ico{display:block;font-size:19px;margin-bottom:3px}
+.overlay{position:fixed;inset:0;background:rgba(1,5,12,.78);backdrop-filter:blur(5px);z-index:50;display:grid;place-items:end center}
+.sheet{width:min(430px,100%);max-height:88vh;overflow:auto;background:#08111f;border-top:1px solid #2a4165;padding:20px;border-radius:20px 20px 0 0}
+.sheet h2{font:800 24px Oxanium;margin:3px 0 6px}
+.reason{display:grid;gap:8px;margin-top:15px}
+.alert{padding:16px;border:1px solid #5736aa;background:rgba(124,58,237,.12);border-radius:12px;margin-top:14px}
+.alert h3{font:800 16px Oxanium;color:#b6a0ff;margin:0 0 5px}
+.questline{display:flex;justify-content:space-between;align-items:center;padding:13px;border:1px solid #1d3150;background:#091524;border-radius:12px;margin-top:9px}
+.check{width:42px;height:42px;border-radius:11px;border:1px solid #315181;background:#0c1a2e;color:#7aa8ff;font-weight:900}
+.check.done{background:#174b3a;border-color:#35d07f;color:#8df0ba}
+.academy-card{padding:14px;margin-top:10px}.academy-card h3{font:800 16px Oxanium;margin:0 0 5px}
+.mini{font-size:12px;color:var(--muted)}
+.badges{display:flex;gap:8px;flex-wrap:wrap}.badge{font-size:11px;border:1px solid #2d4770;padding:7px 9px;border-radius:99px;background:#0b1728}
+.toggle{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-top:1px solid #192b47}
+.switch{width:46px;height:26px;background:#14243b;border-radius:99px;padding:3px;transition:.2s}.switch i{display:block;width:20px;height:20px;background:#72829a;border-radius:50%;transition:.2s}
+.switch.on{background:#1d4ed8}.switch.on i{transform:translateX(20px);background:white}
+@keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@keyframes pulse{50%{opacity:.45;box-shadow:0 0 4px #3b82f6}}
+
+@media (max-height:760px){
+  .screen{padding-top:18px}
+}
+@media (max-width:360px){
+  .title{font-size:28px}
+  .brandname{font-size:19px}
+}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="shell"></div>
+<script>
+const $=s=>document.querySelector(s), shell=$("#shell");
+let sound=true, registered=false, step=0, tab="home", questStatus="available", modified=false, rerolls=0, trial=false, xp=1240, streak=6;
+let profile={name:"",level:"Beginner",equipment:"None",location:"Home",time:"20 minutes"};
+const baseQuest=[
+ {name:"Bodyweight Squats",rep:"2 × 12",ico:"S"},
+ {name:"Knee Push-ups",rep:"2 × 8",ico:"P"},
+ {name:"March in Place",rep:"5 min",ico:"M"}];
+let quest=[...baseQuest];
+
+function beep(type="tap"){
+ if(!sound)return;
+ try{
+  const A=window.AudioContext||window.webkitAudioContext, a=new A(), o=a.createOscillator(), g=a.createGain();
+  const map={tap:[330,.035],accept:[520,.09],step:[650,.06],xp:[740,.08],level:[900,.16],adapt:[580,.11],hes:[180,.16],clear:[820,.18]};
+  let [f,d]=map[type]||map.tap;o.type=type==="hes"?"sawtooth":"sine";o.frequency.value=f;g.gain.setValueAtTime(.0001,a.currentTime);g.gain.exponentialRampToValueAtTime(.06,a.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,a.currentTime+d);
+  o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+d+.02);
+ }catch{}
+}
+function brand(){return `<div class="brand"><div class="mark"><span>AS</span></div><div><div class="brandname">ASC<b>END</b></div><div class="pulseonline"><span class="dot"></span>PULSE ONLINE</div></div></div>`}
+function render(){
+ shell.innerHTML=registered?app():onboarding();
+ bind();
+}
+const steps=[
+ ["Choose your Hunter name","This is how PULSE will address you.","name",null],
+ ["Current fitness level","Your quests begin at a safe, useful baseline.","level",["Beginner","Intermediate","Advanced"]],
+ ["Usual equipment","Select the setup you can normally access.","equipment",["None","Dumbbells","Resistance Bands","Pull-up Bar","Gym access","Other"]],
+ ["Normal workout location","Temporary changes can be handled later.","location",["Home","Gym","Outdoors","Mixed"]],
+ ["Usual time available","PULSE will build daily quests around this.","time",["5 minutes","10 minutes","20 minutes","30+ minutes"]]
+];
+function onboarding(){
+ let [title,sub,key,opts]=steps[step];
+ return `<section class="screen">${brand()}
+ <div style="margin-top:55px"><div class="toprow"><small style="font-weight:800;color:#7f8fa9">HUNTER REGISTRATION</small><small style="font-weight:800;color:#7f8fa9">${String(step+1).padStart(2,"0")} / 05</small></div>
+ <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:12px">${[0,1,2,3,4].map(i=>`<div class="progress"><i style="width:${i<=step?100:0}%"></i></div>`).join("")}</div></div>
+ <div style="margin-top:120px"><div class="kicker">Calibration ${String(step+1).padStart(2,"0")}</div><h1 class="title">${title}</h1><p class="sub">${sub}</p>
+ ${opts?`<div class="options" style="margin-top:26px">${opts.map(o=>`<button class="option ${profile[key]===o?"sel":""}" data-opt="${o}">${o}<span style="float:right">${profile[key]===o?"✓":"›"}</span></button>`).join("")}</div>`:
+ `<div style="margin-top:28px"><label class="kicker" style="color:#8797ae">Hunter designation</label><input class="field" id="nameField" value="${profile.name}" placeholder="Enter your Hunter name" style="margin-top:10px"></div>`}
+ </div>
+ <div style="margin-top:auto;padding-top:36px;padding-bottom:calc(8px + env(safe-area-inset-bottom));display:flex;gap:10px">${step?`<button class="btn ghost" id="back" style="flex:1">BACK</button>`:""}<button class="btn primary" id="next" style="flex:1.7">${step===4?"COMPLETE":"CONTINUE"}</button></div>
+ </section>`
+}
+function nav(){return `<nav class="nav">${[["home","⌂","HOME"],["quests","◈","QUESTS"],["training","◫","TRAIN"],["profile","◎","PROFILE"]].map(([k,i,l])=>`<button data-tab="${k}" class="${tab===k?"active":""}"><span class="ico">${i}</span>${l}</button>`).join("")}</nav>`}
+function dashboard(){
+ const pct=Math.min(100,xp/1800*100);
+ return `<section class="screen">${brand()}<div style="margin-top:34px"><p class="sub" style="margin:0">Welcome back, Hunter</p><div class="toprow"><h1 class="title" style="font-size:28px;margin:4px 0">${profile.name}</h1><b style="color:var(--warn);font-size:13px">🔥 ${streak} DAY STREAK</b></div></div>
+ <div class="panel rankrow glow"><div class="rank">E</div><div style="flex:1"><small class="kicker" style="color:#8797ae">Current rank</small><div style="font:800 18px Oxanium;margin:3px 0 10px">Rank E · Level 7</div><div class="progress"><i style="width:${pct}%"></i></div><div class="toprow mini" style="margin-top:5px"><span>${xp.toLocaleString()} XP</span><span>1,800</span></div></div></div>
+ <div class="statgrid" style="margin-top:10px">${[["Strength",18],["Endurance",15],["Agility",12],["Discipline",21]].map(([n,v])=>`<div class="panel stat"><strong>${v}</strong><br><small>${n}</small></div>`).join("")}</div>
+ <div style="margin-top:25px"><div class="kicker" style="color:#76a7ff">Daily directive</div><h2 style="font:800 22px Oxanium;margin:5px 0">TODAY'S QUEST</h2>
+ <div class="panel quest glow"><div class="toprow"><div><h3>${trial?"Discipline Trial":"Foundation Protocol"}</h3><div class="chips"><span class="chip">${trial?"Moderate":"Beginner"}</span><span class="chip">${modified?"14":"18"} min</span></div></div><div style="text-align:right"><b style="font:800 19px Oxanium;color:#76a7ff">+${trial?70:modified?100:120}</b><div class="mini">XP reward</div></div></div>
+ ${modified?`<div class="alert"><h3>PULSE: ADAPTATION ACCEPTED</h3><div class="mini">Today only — your normal profile has not changed.</div></div>`:""}
+ <div style="margin-top:10px">${quest.map(e=>`<div class="exercise"><div class="exico">${e.ico}</div><b>${e.name}</b><span>${e.rep}</span></div>`).join("")}</div>
+ <button class="btn primary" id="accept" style="width:100%;margin-top:14px">${questStatus==="active"?"CONTINUE QUEST":"ACCEPT QUEST"}</button>
+ <button class="btn secondary" id="modify" style="width:100%;margin-top:9px">MODIFY QUEST</button></div>
+ <div class="message"><small>PULSE MESSAGE</small><div class="mini" style="margin-top:5px;color:#b9c5d7">${questStatus==="complete"?"Growth confirmed. Recovery is now part of the mission.":"Consistency builds capability. Complete today’s measured objective."}</div></div></div></section>`
+}
+function quests(){return `<section class="screen">${brand()}<h1 class="title" style="font-size:28px;margin-top:34px">QUEST LOG</h1><p class="sub">Track completed directives and adaptations.</p>
+ ${[["Yesterday","Foundation Circuit","+100 XP"],["Sep 18","Indoor Endurance","+90 XP"],["Sep 17","Core Protocol","+110 XP"]].map(x=>`<div class="panel" style="padding:14px;margin-top:10px"><div class="toprow"><b>${x[1]}</b><span style="color:#76a7ff;font-weight:800">${x[2]}</span></div><div class="mini">${x[0]} · Completed</div></div>`).join("")}</section>`}
+function training(){return `<section class="screen">${brand()}<h1 class="title" style="font-size:27px;margin-top:34px">TRAINING ACADEMY</h1><p class="sub">Learn the movements behind your quests.</p>
+ <input class="field" placeholder="Search exercises..." style="margin-top:18px;font-size:15px">
+ ${[["Bodyweight Squats","Legs, hips, trunk control"],["Knee Push-ups","Chest, shoulders, triceps"],["Wall Push-ups","Beginner pushing strength"],["Plank","Core stability"],["Glute Bridges","Glutes and hip control"],["March in Place","Endurance and coordination"]].map(x=>`<div class="panel academy-card"><h3>${x[0]}</h3><div class="mini">${x[1]}</div><div class="chips" style="margin-top:8px"><span class="chip">Beginner</span><span class="chip">Safe progression</span></div></div>`).join("")}</section>`}
+function profileTab(){return `<section class="screen">${brand()}<h1 class="title" style="font-size:28px;margin-top:34px">HUNTER STATUS</h1>
+ <div class="panel" style="padding:16px"><div class="toprow"><div><div class="kicker">Hunter</div><h2 style="margin:4px 0;font:800 22px Oxanium">${profile.name}</h2></div><div class="rank" style="width:54px;height:54px">E</div></div></div>
+ <h3 style="font:800 16px Oxanium;margin-top:22px">ACHIEVEMENTS</h3><div class="badges"><span class="badge">First Quest</span><span class="badge">3-Day Streak</span><span class="badge">Consistency I</span></div>
+ <div class="panel" style="padding:0 15px;margin-top:16px"><div class="toggle"><span>Sound effects</span><button class="switch ${sound?"on":""}" id="sound"><i></i></button></div><div class="toggle"><span>Usual equipment</span><b>${profile.equipment}</b></div><div class="toggle"><span>Workout location</span><b>${profile.location}</b></div><div class="toggle"><span>Usual time</span><b>${profile.time}</b></div></div></section>`}
+function app(){
+ let content=tab==="home"?dashboard():tab==="quests"?quests():tab==="training"?training():profileTab();
+ return content+nav()+`<div id="modal"></div>`;
+}
+function bind(){
+ document.querySelectorAll("[data-opt]").forEach(b=>b.onclick=()=>{beep();let key=steps[step][2];profile[key]=b.dataset.opt;render()});
+ let nf=$("#nameField");if(nf) nf.oninput=e=>profile.name=e.target.value;
+ let next=$("#next");if(next)next.onclick=()=>{beep("accept");if(step<4){step++;render()}else{registered=true;render()}};
+ let back=$("#back");if(back)back.onclick=()=>{beep();step--;render()};
+ document.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{beep();tab=b.dataset.tab;render()});
+ let accept=$("#accept");if(accept)accept.onclick=()=>questMode();
+ let modify=$("#modify");if(modify)modify.onclick=()=>modifySheet();
+ let snd=$("#sound");if(snd)snd.onclick=()=>{sound=!sound;render()};
+}
+function modifySheet(){
+ beep();const modal=$("#modal");modal.innerHTML=`<div class="overlay"><div class="sheet"><div class="kicker">PULSE ADAPTATION</div><h2>What changed today?</h2><p class="sub">Choose a real constraint and PULSE will adapt this quest for today only.</p><div class="reason">${["No equipment","Can't go outside","Less time","Too difficult","Too easy","Other"].map(r=>`<button class="option" data-reason="${r}">${r}<span style="float:right">›</span></button>`).join("")}</div><button class="btn ghost" id="closeSheet" style="width:100%;margin-top:15px">CANCEL</button></div></div>`;
+ $("#closeSheet").onclick=()=>modal.innerHTML="";
+ document.querySelectorAll("[data-reason]").forEach(b=>b.onclick=()=>adapt(b.dataset.reason));
+}
+function adapt(reason){
+ if(reason==="Other"){rerolls++;if(rerolls>=3){trial=true;quest=[{name:"Bodyweight Squats",rep:"2 × 10",ico:"S"},{name:"Wall Push-ups",rep:"2 × 8",ico:"W"},{name:"March in Place",rep:"4 min",ico:"M"}];modified=true;beep("hes");showPulse("PULSE DETECTED HESITATION","A moderate Discipline Trial has been assigned. Reward reduced to +70 XP.");return}modifySheet();return}
+ modified=true;trial=false;quest=[...baseQuest];
+ if(reason==="Too difficult")quest[1]={name:"Wall Push-ups",rep:"2 × 10",ico:"W"};
+ if(reason==="Too easy")quest[0]={name:"Tempo Squats",rep:"2 × 12",ico:"T"};
+ if(reason==="Less time")quest=[{name:"Bodyweight Squats",rep:"2 × 10",ico:"S"},{name:"Knee Push-ups",rep:"2 × 6",ico:"P"},{name:"March in Place",rep:"3 min",ico:"M"}];
+ if(reason==="No equipment")quest[1]={name:"Wall Push-ups",rep:"2 × 10",ico:"W"};
+ if(reason==="Can't go outside")quest[2]={name:"Indoor March",rep:"5 min",ico:"M"};
+ beep("adapt");showPulse("PULSE: ADAPTATION ACCEPTED","Quest adjusted for today only. Your normal profile remains unchanged.");
+}
+function showPulse(title,msg){
+ $("#modal").innerHTML=`<div class="overlay"><div class="sheet"><div class="alert"><h3>${title}</h3><div class="mini">${msg}</div></div><button class="btn primary" id="pulseok" style="width:100%;margin-top:16px">CONTINUE</button></div></div>`;
+ $("#pulseok").onclick=()=>{beep();$("#modal").innerHTML="";render()};
+}
+function questMode(){
+ beep("accept");questStatus="active";shell.innerHTML=`<section class="screen"><div class="toprow"><button class="btn ghost" id="qback">←</button><div style="text-align:center"><div class="kicker" style="color:#76a7ff">ACTIVE QUEST</div><div class="mini">PULSE SESSION</div></div><div style="width:52px"></div></div>
+ <div style="text-align:center;margin-top:40px"><div id="ring" class="rank" style="margin:auto;width:96px;height:96px;border-radius:50%;color:#76a7ff">0%</div><h1 class="title" style="font-size:25px">${trial?"DISCIPLINE TRIAL":"FOUNDATION PROTOCOL"}</h1><p class="sub">Complete each movement at a controlled pace.</p></div>
+ <div id="qlist" style="margin-top:25px">${quest.map((e,i)=>`<div class="questline"><div><b>${e.name}</b><div class="mini">${e.rep}</div></div><button class="check" data-check="${i}">${String(i+1).padStart(2,"0")}</button></div>`).join("")}</div>
+ <button class="btn primary hidden" id="finish" style="width:100%;margin-top:18px">COMPLETE QUEST</button></section>`;
+ let done=new Set();$("#qback").onclick=render;document.querySelectorAll("[data-check]").forEach(b=>b.onclick=()=>{beep("step");let i=b.dataset.check;if(done.has(i)){done.delete(i);b.classList.remove("done");b.textContent=String(+i+1).padStart(2,"0")}else{done.add(i);b.classList.add("done");b.textContent="✓"}let p=Math.round(done.size/quest.length*100);$("#ring").textContent=p+"%";$("#finish").classList.toggle("hidden",done.size!==quest.length)});
+ $("#finish").onclick=clearQuest;
+}
+function clearQuest(){
+ beep("clear");questStatus="complete";xp+=trial?70:modified?100:120;streak++;shell.innerHTML=`<section class="screen" style="display:grid;place-items:center;text-align:center;padding-bottom:22px"><div><div class="mark" style="margin:auto;width:92px;height:92px"><span style="font-size:24px">✓</span></div><div class="kicker" style="margin-top:24px;color:#76a7ff">PULSE CONFIRMATION</div><h1 class="title">QUEST CLEARED</h1><p class="sub">+${trial?70:modified?100:120} XP recorded. ${trial?"RESOLVE RESTORED.":"Progress synchronized."}</p><button class="btn primary" id="homebtn" style="width:100%;margin-top:28px">RETURN TO DASHBOARD</button></div></section>`;$("#homebtn").onclick=()=>{tab="home";render()}
+}
+render();
+</script>
+</body>
+</html>
